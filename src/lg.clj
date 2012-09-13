@@ -1,7 +1,7 @@
 (ns lg
   "Simple logging module for Clojure
 
-  nih4j
+  org.commons.util.NIH4J
   "
   (:import [java.text SimpleDateFormat]))
 
