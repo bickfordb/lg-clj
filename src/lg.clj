@@ -79,6 +79,11 @@
   []
   (reset! channels []))
 
+(defn dispatch-event
+  [event]
+  (doseq [ch @lg/channels]
+    (ch event)))
+
 (defmacro event
   "Generate an event"
   [level fmt & fmt-vals]
@@ -89,11 +94,12 @@
        (let [evt# {:format ~fmt
                    :format-vals (list ~@fmt-vals)
                    :level level#
-                   :throwable (Throwable.)
+                   :throwable (Throwable. )
                    :date (java.util.Date.)
                    :ns ns#}]
-         (doseq [ch# @lg/channels]
-           (ch# evt#))))))
+         ; Move the [doseq] into a separate function so that logging macros can
+         ; be called inside of try/finally blocks
+         (lg/dispatch-event evt#)))))
 
 (defmacro info
   "Report an info event"
